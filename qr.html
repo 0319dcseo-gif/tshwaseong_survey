@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>화성센터 담당자 도구 - QR 생성 · 시트 바로가기 · 연동 점검</title>
+<link rel="stylesheet" href="./assets/survey.css">
+<style>
+  .auth-gate {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px 16px;
+    background: linear-gradient(155deg, var(--brand-dark) 0%, var(--brand) 60%, var(--brand-mid) 100%);
+  }
+  .auth-gate.hidden {
+    display: none;
+  }
+  .admin-app.hidden {
+    display: none;
+  }
+  .btn-row {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-top: 14px;
+  }
+  .btn-solid {
+    flex: 1;
+    min-width: 150px;
+    padding: 13px 16px;
+    background: var(--brand);
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-size: 14.5px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: center;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .btn-accent {
+    flex: 1;
+    min-width: 150px;
+    padding: 13px 16px;
+    background: var(--accent);
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-size: 14.5px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: center;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .btn-green {
+    flex: 1;
+    min-width: 150px;
+    padding: 13px 16px;
+    background: #16794c;
+    color: #ffffff;
+    border: none;
+    border-radius: 10px;
+    font-size: 14.5px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: center;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .btn-outline {
+    flex: 1;
+    min-width: 150px;
+    padding: 13px 16px;
+    background: #ffffff;
+    color: var(--brand);
+    border: 1.5px solid var(--brand);
+    border-radius: 10px;
+    font-size: 14.5px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+    text-align: center;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+  }
+  .sheet-link-box {
+    padding: 14px 16px;
+    background: var(--success-bg);
+    border: 1.5px solid #86efac;
+    border-radius: 12px;
+    font-size: 13.5px;
+    color: #14532d;
+    word-break: break-all;
+    line-height: 1.6;
+  }
+  .sheet-link-box.unset {
+    background: #fffbeb;
+    border-color: #fcd34d;
+    color: #92400e;
+  }
+  .sheet-link-url {
+    display: block;
+    margin-top: 4px;
+    font-weight: 700;
+    color: #0f4c5c;
+    text-decoration: underline;
+  }
+  .diag-result {
+    margin-top: 14px;
+    padding: 14px 16px;
+    border-radius: 10px;
+    font-size: 13.5px;
+    line-height: 1.7;
+    background: var(--surface-muted);
+    border: 1px solid var(--border);
+    color: var(--text-sub);
+    word-break: break-all;
+  }
+  .diag-result.ok {
+    background: var(--success-bg);
+    border-color: #86efac;
+    color: #14532d;
+  }
+  .diag-result.err {
+    background: var(--danger-bg);
+    border-color: #fecaca;
+    color: #991b1b;
+  }
+  .url-hint {
+    font-size: 13px;
+    color: var(--text-muted);
+    margin-top: 6px;
+    line-height: 1.5;
+  }
+  /* 인쇄용 포스터 카드 */
+  .poster-card {
+    background: #ffffff;
+    border-radius: 22px;
+    overflow: hidden;
+    box-shadow: 0 8px 28px rgba(15, 76, 92, 0.12);
+    border: 2px solid var(--brand);
+  }
+  .poster-banner {
+    background: linear-gradient(135deg, var(--brand-dark), var(--brand));
+    color: #ffffff;
+    padding: 28px 24px 24px;
+    text-align: center;
+  }
+  .poster-org {
+    font-size: 15px;
+    font-weight: 700;
+    opacity: 0.9;
+    margin-bottom: 6px;
+  }
+  .poster-title {
+    font-size: 30px;
+    font-weight: 900;
+    letter-spacing: -0.8px;
+  }
+  .poster-body {
+    padding: 32px 26px 36px;
+    text-align: center;
+  }
+  .poster-course {
+    display: inline-block;
+    background: var(--accent-soft);
+    color: #b54708;
+    border: 1.5px solid #fdba74;
+    padding: 7px 20px;
+    border-radius: 999px;
+    font-size: 16px;
+    font-weight: 800;
+    margin-bottom: 24px;
+  }
+  .qr-box {
+    width: 280px;
+    height: 280px;
+    margin: 0 auto 22px;
+    padding: 14px;
+    border-radius: 18px;
+    border: 2px solid var(--border);
+    background: #ffffff;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .qr-box canvas,
+  .qr-box img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+  }
+  .poster-steps {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    flex-wrap: wrap;
+    margin-bottom: 18px;
+  }
+  .poster-step-chip {
+    background: var(--brand-light);
+    color: var(--brand-dark);
+    font-size: 14px;
+    font-weight: 700;
+    padding: 8px 14px;
+    border-radius: 10px;
+  }
+  .poster-url {
+    font-size: 12.5px;
+    color: var(--text-muted);
+    word-break: break-all;
+    background: var(--surface-muted);
+    padding: 10px 14px;
+    border-radius: 8px;
+    border: 1px solid var(--border);
+  }
+  @media print {
+    body {
+      background: #ffffff !important;
+    }
+    .no-print {
+      display: none !important;
+    }
+    .container {
+      max-width: 100% !important;
+      padding: 0 !important;
+    }
+    .poster-card {
+      box-shadow: none !important;
+      margin-top: 16px;
+      -webkit-print-color-adjust: exact;
+      print-color-adjust: exact;
+    }
+    .qr-box {
+      width: 340px !important;
+      height: 340px !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<!-- 직접 URL 접속 시에도 비밀번호 인증을 요구하는 잠금 화면 -->
+<div class="auth-gate" id="authGate">
+  <div class="modal-card">
+    <div class="modal-icon" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+    </div>
+    <h1 class="modal-title">화성센터 담당자 인증</h1>
+    <p class="modal-desc">관리자 도구(구글 시트 바로가기 · 연동 테스트 · QR 포스터 생성)에 접속하려면 비밀번호를 입력하세요.</p>
+    <input type="password" id="gatePwInput" placeholder="비밀번호 입력" autocomplete="off">
+    <div class="error-msg" id="gatePwErr">비밀번호가 일치하지 않습니다.</div>
+    <div class="modal-actions">
+      <a href="./" class="modal-btn-cancel" style="text-align:center;text-decoration:none;">메인으로</a>
+      <button type="button" class="modal-btn-confirm" id="gateUnlockBtn">잠금 해제</button>
+    </div>
+  </div>
+</div>
+
+<!-- 인증 완료 후 표시되는 관리자 도구 본문 -->
+<div class="admin-app hidden" id="adminApp">
+  <header class="hero-header no-print">
+    <div class="hero-inner">
+      <div class="hero-top-row">
+        <div class="brand-pill">
+          <span class="brand-dot"></span>
+          <span id="centerNameTop">화성교통안전체험교육센터</span>
+        </div>
+        <button type="button" class="admin-lock-btn" id="lockOutBtn" title="관리자 잠금(로그아웃)" aria-label="관리자 잠금">
+          <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+            <path d="M7 11V7a5 5 0 0 1 9.9-1"/>
+          </svg>
+        </button>
+      </div>
+      <h1 class="hero-title">센터 담당자 관리자 도구</h1>
+      <p class="hero-subtitle">연동된 구글 스프레드시트 바로가기, 실시간 연동 테스트, 과정별 QR 포스터 출력을 한곳에서 관리합니다.</p>
+    </div>
+  </header>
+
+  <main class="container">
+    <!-- 1. 연동된 구글 스프레드시트 바로가기 카드 -->
+    <section class="card no-print">
+      <div class="card-head">
+        <div class="card-eyebrow">GOOGLE SPREADSHEET</div>
+        <h2 class="card-title">연동된 구글 스프레드시트 바로가기</h2>
+        <p class="card-desc">설문 응답이 연도·과정별로 자동 누적되는 구글 스프레드시트 주소입니다.</p>
+      </div>
+
+      <div class="sheet-link-box" id="sheetLinkBox">
+        <div id="sheetLinkStatus">설정된 구글 스프레드시트 주소를 불러오는 중...</div>
+        <a id="sheetLinkAnchor" class="sheet-link-url" href="#" target="_blank" rel="noopener noreferrer" style="display:none;"></a>
+      </div>
+
+      <div class="btn-row">
+        <a id="openSheetBtn" class="btn-green" href="#" target="_blank" rel="noopener noreferrer">📊 구글 스프레드시트 열기</a>
+        <button type="button" class="btn-outline" id="copySheetUrlBtn">📋 스프레드시트 주소 복사</button>
+      </div>
+    </section>
+
+    <!-- 2. 구글 시트 실시간 연동 진단 카드 -->
+    <section class="card no-print">
+      <div class="card-head">
+        <div class="card-eyebrow">CONNECTION CHECK</div>
+        <h2 class="card-title">구글 시트 연동 상태 실시간 확인</h2>
+        <p class="card-desc"><code>config.js</code>의 Apps Script URL로 연결 상태와 실제 데이터 저장을 확인합니다.</p>
+      </div>
+
+      <div class="question">
+        <label class="q-label" for="diagUrl">연동된 구글 Apps Script 웹 앱 URL</label>
+        <input type="text" id="diagUrl" placeholder="https://script.google.com/macros/s/.../exec">
+        <div class="url-hint">연결 확인(Ping)을 실행하면 연결된 스프레드시트 URL과 연도·과정별 시트 누적 건수가 자동 조회됩니다.</div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn-solid" id="pingBtn">🔍 1. 연결 상태 확인 (Ping)</button>
+        <button type="button" class="btn-accent" id="testSendBtn">🧪 2. 테스트 데이터 1건 전송</button>
+      </div>
+
+      <div class="diag-result" id="diagResult">
+        위 버튼을 눌러 구글 스프레드시트 연결 상태를 확인해 주세요.
+      </div>
+    </section>
+
+    <!-- 3. QR 생성 컨트롤 -->
+    <section class="card no-print">
+      <div class="card-head">
+        <div class="card-eyebrow">QR POSTER GENERATOR</div>
+        <h2 class="card-title">강의실 QR 코드 생성 · A4 인쇄</h2>
+        <p class="card-desc">통합 메인 또는 과정별 전용 QR 코드를 만들어 강의실에 게시하거나 PPT에 삽입하세요.</p>
+      </div>
+
+      <div class="question">
+        <label class="q-label" for="baseUrl">배포된 GitHub Pages 기본 주소</label>
+        <input type="text" id="baseUrl" placeholder="예: https://hwaseong-ts.github.io/hwaseong-survey">
+        <div class="url-hint">GitHub Pages 배포 후 접속하면 주소가 자동으로 채워집니다.</div>
+      </div>
+
+      <div class="question">
+        <label class="q-label" for="targetType">QR 코드 연결 대상</label>
+        <select id="targetType">
+          <option value="portal">통합 메인 (개인택시 / 버스양성 / 일반과정 선택)</option>
+          <option value="taxi">개인택시 양수교육 설문 전용</option>
+          <option value="bus">버스양성과정 설문 전용</option>
+          <option value="general">일반과정 설문 전용</option>
+        </select>
+      </div>
+
+      <div class="question" id="coursePickerWrap" style="display:none;">
+        <label class="q-label" for="specificCourse">특정 일반과정 자동 선택 (선택사항)</label>
+        <select id="specificCourse">
+          <option value="">-- 교육생이 직접 과정 선택 --</option>
+        </select>
+        <div class="url-hint">특정 과정을 지정하면 QR 스캔 시 해당 과정이 자동으로 선택된 상태로 열립니다.</div>
+      </div>
+
+      <div class="btn-row">
+        <button type="button" class="btn-solid" id="printBtn">🖨️ A4 포스터 인쇄</button>
+        <button type="button" class="btn-outline" id="downloadBtn">💾 QR 이미지(PNG) 저장</button>
+        <button type="button" class="btn-outline" id="copyUrlBtn">🔗 설문 링크 복사</button>
+      </div>
+
+      <div style="text-align:center;">
+        <a class="back-link" href="./">← 설문 메인 화면으로 돌아가기</a>
+      </div>
+    </section>
+
+    <!-- 4. 인쇄용 A4 포스터 미리보기 -->
+    <section class="poster-card" id="posterCard">
+      <div class="poster-banner">
+        <div class="poster-org" id="posterCenter">화성교통안전체험교육센터</div>
+        <div class="poster-title">모바일 교육 만족도 조사</div>
+      </div>
+      <div class="poster-body">
+        <div class="poster-course" id="posterBadge">전체 교육과정</div>
+        <div class="qr-box" id="qrBox">
+          <span style="color:#94a3b8; font-size:14px;">QR 생성 중...</span>
+        </div>
+        <div class="poster-steps">
+          <span class="poster-step-chip">① 카메라로 QR 스캔</span>
+          <span class="poster-step-chip">② 화면 링크 터치</span>
+          <span class="poster-step-chip">③ 설문 제출 완료</span>
+        </div>
+        <div class="poster-url" id="posterUrl"></div>
+      </div>
+    </section>
+  </main>
+</div>
+
+<script src="./config.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.3/build/qrcode.min.js"></script>
+<script>
+(function () {
+  var config = window.SURVEY_CONFIG || {};
+  var expectedPw = String(config.ADMIN_PASSWORD || '1234');
+  var authGate = document.getElementById('authGate');
+  var adminApp = document.getElementById('adminApp');
+  var gatePwInput = document.getElementById('gatePwInput');
+  var gatePwErr = document.getElementById('gatePwErr');
+  var initialized = false;
+
+  function unlock() {
+    authGate.classList.add('hidden');
+    adminApp.classList.remove('hidden');
+    if (!initialized) {
+      initialized = true;
+      initAdminTools();
+    }
+  }
+
+  function tryGateUnlock() {
+    if (gatePwInput.value === expectedPw) {
+      sessionStorage.setItem('hs_admin_auth', 'ok');
+      unlock();
+    } else {
+      gatePwErr.classList.add('show');
+      gatePwInput.select();
+    }
+  }
+
+  if (sessionStorage.getItem('hs_admin_auth') === 'ok') {
+    unlock();
+  } else {
+    setTimeout(function () { gatePwInput.focus(); }, 60);
+  }
+
+  document.getElementById('gateUnlockBtn').addEventListener('click', tryGateUnlock);
+  gatePwInput.addEventListener('keydown', function (e) {
+    gatePwErr.classList.remove('show');
+    if (e.key === 'Enter') tryGateUnlock();
+  });
+
+  document.getElementById('lockOutBtn').addEventListener('click', function () {
+    sessionStorage.removeItem('hs_admin_auth');
+    window.location.href = './';
+  });
+
+  function initAdminTools() {
+    var centerName = config.CENTER_NAME || '화성교통안전체험교육센터';
+    document.getElementById('centerNameTop').textContent = centerName;
+    document.getElementById('posterCenter').textContent = centerName;
+
+    var diagUrlEl = document.getElementById('diagUrl');
+    var diagResultEl = document.getElementById('diagResult');
+    var sheetLinkBox = document.getElementById('sheetLinkBox');
+    var sheetLinkStatus = document.getElementById('sheetLinkStatus');
+    var sheetLinkAnchor = document.getElementById('sheetLinkAnchor');
+    var openSheetBtn = document.getElementById('openSheetBtn');
+    var currentSpreadsheetUrl = '';
+
+    diagUrlEl.value = config.SHEET_URL || '';
+
+    function validGasUrl(u) {
+      return (
+        typeof u === 'string' &&
+        u.indexOf('https://script.google.com/macros/s/') === 0 &&
+        u.indexOf('YOUR_GOOGLE_APPS_SCRIPT') === -1
+      );
+    }
+
+    function validSpreadsheetUrl(u) {
+      return (
+        typeof u === 'string' &&
+        u.indexOf('https://docs.google.com/spreadsheets/') === 0 &&
+        u.indexOf('YOUR_GOOGLE_SPREADSHEET') === -1
+      );
+    }
+
+    function renderSpreadsheetLink(url, label) {
+      if (validSpreadsheetUrl(url)) {
+        currentSpreadsheetUrl = url;
+        sheetLinkBox.classList.remove('unset');
+        sheetLinkStatus.textContent = label || '✅ 연동된 구글 스프레드시트 주소:';
+        sheetLinkAnchor.textContent = url;
+        sheetLinkAnchor.href = url;
+        sheetLinkAnchor.style.display = 'block';
+        openSheetBtn.href = url;
+        openSheetBtn.style.opacity = '1';
+        openSheetBtn.style.pointerEvents = 'auto';
+      } else {
+        currentSpreadsheetUrl = '';
+        sheetLinkBox.classList.add('unset');
+        sheetLinkStatus.innerHTML =
+          '⚠️ 아직 <code>config.js</code>의 <code>SPREADSHEET_URL</code>이 입력되지 않았습니다.<br>' +
+          '<code>config.js</code>에 구글 시트 주소를 입력하거나, 아래 <strong>연결 상태 확인(Ping)</strong>을 누르면 시트 주소가 자동으로 표시됩니다.';
+        sheetLinkAnchor.style.display = 'none';
+        openSheetBtn.href = '#';
+        openSheetBtn.style.opacity = '0.5';
+        openSheetBtn.style.pointerEvents = 'none';
+      }
+    }
+
+    renderSpreadsheetLink(config.SPREADSHEET_URL || '');
+
+    document.getElementById('copySheetUrlBtn').addEventListener('click', function () {
+      if (!currentSpreadsheetUrl) {
+        alert('설정된 구글 스프레드시트 URL이 없습니다. 먼저 config.js를 입력하거나 Ping 확인을 눌러주세요.');
+        return;
+      }
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(currentSpreadsheetUrl).then(function () {
+          alert('구글 스프레드시트 주소가 복사되었습니다:\n' + currentSpreadsheetUrl);
+        });
+      } else {
+        prompt('아래 스프레드시트 주소를 복사해 주세요:', currentSpreadsheetUrl);
+      }
+    });
+
+    function showDiag(type, html) {
+      diagResultEl.className = 'diag-result' + (type ? ' ' + type : '');
+      diagResultEl.innerHTML = html;
+    }
+
+    function jsonpRequest(url, onSuccess, onError) {
+      var cbName = 'hsPingCb_' + Date.now();
+      var script = document.createElement('script');
+      var timer = setTimeout(function () {
+        cleanup();
+        onError('응답 시간 초과 (배포 URL 또는 액세스 권한 "모든 사용자" 설정을 확인해 주세요)');
+      }, 10000);
+
+      function cleanup() {
+        clearTimeout(timer);
+        if (script.parentNode) script.parentNode.removeChild(script);
+        try { delete window[cbName]; } catch (e) { window[cbName] = undefined; }
+      }
+
+      window[cbName] = function (data) {
+        cleanup();
+        onSuccess(data);
+      };
+      script.onerror = function () {
+        cleanup();
+        onError('웹 앱에 연결할 수 없습니다. URL 오타 또는 "액세스 권한: 모든 사용자" 설정을 확인해 주세요.');
+      };
+      script.src = url + (url.indexOf('?') > -1 ? '&' : '?') + 'callback=' + cbName;
+      document.body.appendChild(script);
+    }
+
+    document.getElementById('pingBtn').addEventListener('click', function () {
+      var url = diagUrlEl.value.trim();
+      if (!validGasUrl(url)) {
+        showDiag('err', '❌ 올바른 구글 Apps Script 웹 앱 URL이 아닙니다.<br><code>https://script.google.com/macros/s/.../exec</code> 형태여야 합니다.');
+        return;
+      }
+      showDiag('', '⏳ 구글 스프레드시트 서버와 통신 중입니다...');
+      jsonpRequest(
+        url + '?action=ping',
+        function (res) {
+          if (!res || !res.ok) {
+            showDiag('err', '❌ 서버 응답 오류: ' + JSON.stringify(res));
+            return;
+          }
+          if (res.spreadsheetUrl) {
+            renderSpreadsheetLink(res.spreadsheetUrl, '✅ 실시간 확인된 연동 스프레드시트 (' + res.spreadsheetName + '):');
+          }
+          var sheetItems = Array.isArray(res.sheets) && res.sheets.length > 0
+            ? res.sheets.map(function (s) { return '• ' + s.name + ': <strong>' + s.count + '명</strong>'; }).join('<br>')
+            : '• 아직 생성된 과정 시트가 없습니다. (setupSheets 실행 또는 첫 설문 제출 시 자동 생성)';
+          showDiag(
+            'ok',
+            '<strong>✅ 구글 시트 연동 정상!</strong><br>' +
+              '• 스프레드시트명: <strong>' + res.spreadsheetName + '</strong><br>' +
+              '• 요약대시보드: ' + (res.dashboard ? '정상 생성됨' : '미생성 (setupSheets 실행 권장)') + '<br>' +
+              '<strong>[연도 · 과정별 누적 현황]</strong><br>' +
+              sheetItems + '<br>' +
+              '• 확인시각: ' + res.serverTime
+          );
+        },
+        function (errMsg) {
+          showDiag('err', '❌ 연결 실패: ' + errMsg);
+        }
+      );
+    });
+
+    document.getElementById('testSendBtn').addEventListener('click', function () {
+      var url = diagUrlEl.value.trim();
+      if (!validGasUrl(url)) {
+        showDiag('err', '❌ 먼저 유효한 구글 Apps Script 웹 앱 URL을 입력해 주세요.');
+        return;
+      }
+      showDiag('', '⏳ 테스트 응답 1건을 버스양성과정 시트로 전송 중입니다...');
+
+      var t = new Date();
+      var today =
+        t.getFullYear() + '-' +
+        String(t.getMonth() + 1).padStart(2, '0') + '-' +
+        String(t.getDate()).padStart(2, '0');
+
+      var sample = {
+        submissionId: 'DIAG-' + Date.now(),
+        surveyType: 'bus',
+        courseName: '버스양성과정',
+        eduDate: today,
+        age: '45',
+        gender: '1',
+        bizExp: '2',
+        bizMonths: '24',
+        privMonths: '120',
+        r1: '10', r2: '10', r3: '10', r4: '10', r5: '10',
+        r6: '10', r7: '10', r8: '10', r9: '10', r10: '10',
+        satisfiedText: '체험교육',
+        imp_edu_yn: '1', imp_edu_text: '',
+        imp_facility_yn: '1', imp_facility_text: '',
+        imp_etc_yn: '2', imp_etc_text: '[연동테스트] 담당자 도구에서 전송한 테스트 데이터입니다. 확인 후 행 삭제하세요.'
+      };
+
+      fetch(url, {
+        method: 'POST',
+        redirect: 'follow',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify(sample)
+      })
+        .then(function (r) { return r.json(); })
+        .then(function (data) {
+          if (data && data.ok) {
+            showDiag(
+              'ok',
+              '<strong>✅ 테스트 데이터 저장 성공!</strong><br>' +
+                '• 저장된 시트: <strong>' + data.sheet + '</strong> (' + data.row + '번째 행)<br>' +
+                '• 상단의 <strong>구글 스프레드시트 열기</strong> 버튼으로 들어가 <code>' + data.sheet + '</code> 탭과 <code>요약대시보드</code>를 확인한 뒤 테스트 행을 삭제해 주세요.'
+            );
+          } else {
+            showDiag('err', '❌ 저장 실패: ' + JSON.stringify(data));
+          }
+        })
+        .catch(function (err) {
+          showDiag(
+            'err',
+            '❌ 전송 확인 실패 (' + err.message + ')<br>' +
+              'Apps Script 배포 시 <strong>액세스 권한이 있는 사용자: 모든 사용자</strong>로 설정했는지 확인해 주세요.'
+          );
+        });
+    });
+
+    // QR 코드 생성 로직
+    var baseUrlEl = document.getElementById('baseUrl');
+    var targetTypeEl = document.getElementById('targetType');
+    var courseWrap = document.getElementById('coursePickerWrap');
+    var specificCourseEl = document.getElementById('specificCourse');
+    var qrBox = document.getElementById('qrBox');
+    var posterBadge = document.getElementById('posterBadge');
+    var posterUrlEl = document.getElementById('posterUrl');
+
+    if (window.location.protocol === 'http:' || window.location.protocol === 'https:') {
+      var detected = window.location.origin + window.location.pathname.replace(/\/qr\.html$/i, '');
+      baseUrlEl.value = detected.replace(/\/$/, '');
+    } else {
+      baseUrlEl.value = 'https://YOUR-GITHUB-ID.github.io/hwaseong-survey';
+    }
+
+    var courses = (config.COURSES || []).filter(function (c) { return c !== '기타(직접입력)'; });
+    courses.forEach(function (c) {
+      var opt = document.createElement('option');
+      opt.value = c;
+      opt.textContent = c;
+      specificCourseEl.appendChild(opt);
+    });
+
+    function buildTargetInfo() {
+      var base = baseUrlEl.value.trim().replace(/\/$/, '');
+      var type = targetTypeEl.value;
+      if (type === 'taxi') {
+        return { url: base + '/taxi/', label: '개인택시 양수교육' };
+      }
+      if (type === 'bus') {
+        return { url: base + '/bus/', label: '버스양성과정' };
+      }
+      if (type === 'general') {
+        var course = specificCourseEl.value;
+        if (course) {
+          return {
+            url: base + '/general/?course=' + encodeURIComponent(course),
+            label: course
+          };
+        }
+        return { url: base + '/general/', label: '일반과정 교육' };
+      }
+      return { url: base + '/', label: '전체 교육과정 (택시 · 버스양성 · 일반)' };
+    }
+
+    function renderQr() {
+      var info = buildTargetInfo();
+      posterBadge.textContent = info.label;
+      posterUrlEl.textContent = info.url;
+      qrBox.innerHTML = '';
+
+      if (window.QRCode && typeof window.QRCode.toCanvas === 'function') {
+        var canvas = document.createElement('canvas');
+        window.QRCode.toCanvas(
+          canvas,
+          info.url,
+          { width: 320, margin: 1, color: { dark: '#0a3440', light: '#ffffff' }, errorCorrectionLevel: 'M' },
+          function (err) {
+            if (err) renderFallbackImg(info.url);
+            else qrBox.appendChild(canvas);
+          }
+        );
+      } else {
+        renderFallbackImg(info.url);
+      }
+    }
+
+    function renderFallbackImg(url) {
+      var img = document.createElement('img');
+      img.alt = '만족도 조사 QR 코드';
+      img.src =
+        'https://api.qrserver.com/v1/create-qr-code/?size=320x320&margin=8&data=' +
+        encodeURIComponent(url);
+      qrBox.appendChild(img);
+    }
+
+    targetTypeEl.addEventListener('change', function () {
+      courseWrap.style.display = this.value === 'general' ? 'block' : 'none';
+      renderQr();
+    });
+    baseUrlEl.addEventListener('input', renderQr);
+    specificCourseEl.addEventListener('change', renderQr);
+
+    document.getElementById('printBtn').addEventListener('click', function () {
+      window.print();
+    });
+
+    document.getElementById('copyUrlBtn').addEventListener('click', function () {
+      var info = buildTargetInfo();
+      if (navigator.clipboard && navigator.clipboard.writeText) {
+        navigator.clipboard.writeText(info.url).then(function () {
+          alert('설문 링크가 복사되었습니다:\n' + info.url);
+        });
+      } else {
+        prompt('아래 링크를 복사해 주세요:', info.url);
+      }
+    });
+
+    document.getElementById('downloadBtn').addEventListener('click', function () {
+      var canvas = qrBox.querySelector('canvas');
+      var info = buildTargetInfo();
+      if (canvas) {
+        var link = document.createElement('a');
+        link.download = '화성센터_만족도조사_QR_' + info.label.replace(/\s+/g, '_') + '.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      } else {
+        window.open(
+          'https://api.qrserver.com/v1/create-qr-code/?size=600x600&margin=12&data=' +
+            encodeURIComponent(info.url),
+          '_blank'
+        );
+      }
+    });
+
+    renderQr();
+  }
+})();
+</script>
+</body>
+</html>

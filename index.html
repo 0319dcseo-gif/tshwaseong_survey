@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>화성교통안전체험교육센터 고객만족도 조사</title>
+<link rel="stylesheet" href="./assets/survey.css">
+<style>
+  .portal-notice {
+    display: flex;
+    align-items: flex-start;
+    gap: 12px;
+    background: #ffffff;
+    border: 1px solid var(--border);
+    border-radius: var(--radius-md);
+    padding: 15px 18px;
+    margin-bottom: 18px;
+    font-size: 14px;
+    color: var(--text-sub);
+    box-shadow: var(--shadow-card);
+  }
+  .portal-notice-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: var(--brand-light);
+    color: var(--brand);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    font-weight: 800;
+    flex-shrink: 0;
+  }
+  .portal-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+  }
+  .portal-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    text-decoration: none;
+    background: #ffffff;
+    border-radius: var(--radius-lg);
+    padding: 21px 18px;
+    border: 1.5px solid var(--border);
+    box-shadow: var(--shadow-card);
+    color: inherit;
+    transition: transform 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+  }
+  .portal-card:hover,
+  .portal-card:active {
+    border-color: var(--brand);
+    transform: translateY(-2px);
+    box-shadow: 0 10px 26px rgba(15, 76, 92, 0.12);
+  }
+  .portal-icon-box {
+    width: 56px;
+    height: 56px;
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .portal-icon-box.taxi {
+    background: var(--accent-soft);
+    color: var(--accent);
+  }
+  .portal-icon-box.bus {
+    background: var(--bus-soft);
+    color: var(--bus);
+  }
+  .portal-icon-box.general {
+    background: var(--brand-light);
+    color: var(--brand);
+  }
+  .portal-body {
+    flex: 1;
+    min-width: 0;
+  }
+  .portal-badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 800;
+    padding: 3px 9px;
+    border-radius: 6px;
+    margin-bottom: 6px;
+  }
+  .portal-badge.taxi {
+    background: var(--accent-soft);
+    color: #b54708;
+  }
+  .portal-badge.bus {
+    background: var(--bus-soft);
+    color: var(--bus);
+  }
+  .portal-badge.general {
+    background: var(--brand-light);
+    color: var(--brand);
+  }
+  .portal-title {
+    font-size: 18.5px;
+    font-weight: 800;
+    color: var(--text);
+    letter-spacing: -0.4px;
+    margin-bottom: 4px;
+  }
+  .portal-desc {
+    font-size: 13.5px;
+    color: var(--text-sub);
+    line-height: 1.48;
+  }
+  .portal-chevron {
+    font-size: 22px;
+    font-weight: 800;
+    color: var(--text-muted);
+    flex-shrink: 0;
+  }
+  .portal-card:hover .portal-chevron {
+    color: var(--brand);
+  }
+</style>
+</head>
+<body>
+<header class="hero-header">
+  <div class="hero-inner">
+    <div class="hero-top-row">
+      <div class="brand-pill">
+        <span class="brand-dot"></span>
+        <span id="centerName">화성교통안전체험교육센터</span>
+      </div>
+      <button type="button" class="admin-lock-btn" id="openAdminModalBtn" title="담당자 도구" aria-label="담당자 도구 잠금 해제">
+        <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+          <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+          <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+        </svg>
+      </button>
+    </div>
+    <h1 class="hero-title">모바일 교육 만족도 조사</h1>
+    <p class="hero-subtitle">수료하신 교육과정을 선택하시면 1~2분 내로 간편하게 설문을 마칠 수 있습니다.</p>
+  </div>
+</header>
+
+<main class="container">
+  <div class="portal-notice">
+    <div class="portal-notice-icon">✓</div>
+    <div>
+      응답 내용은 <strong>익명으로 집계</strong>되며, 화성센터 교육 품질과 시설 환경 개선을 위한 소중한 자료로만 활용됩니다.
+    </div>
+  </div>
+
+  <div class="portal-grid">
+    <!-- 1. 개인택시 양수교육 설문 -->
+    <a class="portal-card" href="./taxi/">
+      <div class="portal-icon-box taxi" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M10 2h4"/>
+          <path d="M5 11l1.5-4.5A2 2 0 0 1 8.4 5h7.2a2 2 0 0 1 1.9 1.5L19 11"/>
+          <rect x="3" y="11" width="18" height="7" rx="2"/>
+          <circle cx="7" cy="18" r="2"/>
+          <circle cx="17" cy="18" r="2"/>
+        </svg>
+      </div>
+      <div class="portal-body">
+        <span class="portal-badge taxi">택시 양수</span>
+        <div class="portal-title">개인택시 양수교육 설문</div>
+        <div class="portal-desc">개인택시 양수요건 교통안전체험교육 수료생 전용 (4단계)</div>
+      </div>
+      <span class="portal-chevron">›</span>
+    </a>
+
+    <!-- 2. 버스양성과정 설문 -->
+    <a class="portal-card" href="./bus/">
+      <div class="portal-icon-box bus" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <rect x="4" y="3" width="16" height="14" rx="2"/>
+          <path d="M4 11h16"/>
+          <path d="M8 17v3"/>
+          <path d="M16 17v3"/>
+          <circle cx="8" cy="14" r="1"/>
+          <circle cx="16" cy="14" r="1"/>
+        </svg>
+      </div>
+      <div class="portal-body">
+        <span class="portal-badge bus">버스 양성</span>
+        <div class="portal-title">버스양성과정 설문</div>
+        <div class="portal-desc">신규 버스운전자 양성과정 수료생 전용 (3단계)</div>
+      </div>
+      <span class="portal-chevron">›</span>
+    </a>
+
+    <!-- 3. 일반과정 설문 -->
+    <a class="portal-card" href="./general/">
+      <div class="portal-icon-box general" aria-hidden="true">
+        <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+          <path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2"/>
+          <rect x="9" y="3" width="6" height="4" rx="1"/>
+          <path d="M9 12h6"/>
+          <path d="M9 16h4"/>
+        </svg>
+      </div>
+      <div class="portal-body">
+        <span class="portal-badge general">일반 · 법정 · 기본/심화</span>
+        <div class="portal-title">일반과정 설문</div>
+        <div class="portal-desc">전기차 기본교육, 법정교육(버스·택시·화물), 기본·심화·자격 과정 선택 (3단계)</div>
+      </div>
+      <span class="portal-chevron">›</span>
+    </a>
+  </div>
+</main>
+
+<!-- 담당자 도구 비밀번호 입력 모달 -->
+<div class="modal-backdrop" id="adminModal" role="dialog" aria-modal="true" aria-labelledby="adminModalTitle">
+  <div class="modal-card">
+    <div class="modal-icon" aria-hidden="true">
+      <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+        <rect x="3" y="11" width="18" height="11" rx="2" ry="2"/>
+        <path d="M7 11V7a5 5 0 0 1 10 0v4"/>
+      </svg>
+    </div>
+    <h2 class="modal-title" id="adminModalTitle">센터 담당자 인증</h2>
+    <p class="modal-desc">관리자 도구(QR 생성 · 시트 연동 · 스프레드시트 바로가기)에 접속하려면 비밀번호를 입력하세요.</p>
+    <input type="password" id="adminPwInput" placeholder="비밀번호 입력" autocomplete="off">
+    <div class="error-msg" id="adminPwErr">비밀번호가 일치하지 않습니다.</div>
+    <div class="modal-actions">
+      <button type="button" class="modal-btn-cancel" id="cancelAdminBtn">취소</button>
+      <button type="button" class="modal-btn-confirm" id="confirmAdminBtn">접속하기</button>
+    </div>
+  </div>
+</div>
+
+<script src="./config.js"></script>
+<script>
+(function () {
+  var cfg = window.SURVEY_CONFIG || {};
+  if (cfg.CENTER_NAME) {
+    document.getElementById('centerName').textContent = cfg.CENTER_NAME;
+  }
+
+  var modal = document.getElementById('adminModal');
+  var pwInput = document.getElementById('adminPwInput');
+  var pwErr = document.getElementById('adminPwErr');
+
+  function openModal() {
+    if (sessionStorage.getItem('hs_admin_auth') === 'ok') {
+      window.location.href = './qr.html';
+      return;
+    }
+    pwInput.value = '';
+    pwErr.classList.remove('show');
+    modal.classList.add('show');
+    setTimeout(function () { pwInput.focus(); }, 60);
+  }
+
+  function closeModal() {
+    modal.classList.remove('show');
+  }
+
+  function verifyPassword() {
+    var expected = String(cfg.ADMIN_PASSWORD || '1234');
+    if (pwInput.value === expected) {
+      sessionStorage.setItem('hs_admin_auth', 'ok');
+      window.location.href = './qr.html';
+    } else {
+      pwErr.classList.add('show');
+      pwInput.select();
+    }
+  }
+
+  document.getElementById('openAdminModalBtn').addEventListener('click', openModal);
+  document.getElementById('cancelAdminBtn').addEventListener('click', closeModal);
+  document.getElementById('confirmAdminBtn').addEventListener('click', verifyPassword);
+  modal.addEventListener('click', function (e) {
+    if (e.target === modal) closeModal();
+  });
+  pwInput.addEventListener('keydown', function (e) {
+    pwErr.classList.remove('show');
+    if (e.key === 'Enter') verifyPassword();
+    if (e.key === 'Escape') closeModal();
+  });
+})();
+</script>
+</body>
+</html>

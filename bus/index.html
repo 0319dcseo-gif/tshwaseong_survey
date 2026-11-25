@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>화성센터 고객만족도 조사 - 버스양성과정</title>
+<link rel="stylesheet" href="../assets/survey.css">
+</head>
+<body>
+<header class="hero-header">
+  <div class="hero-inner">
+    <div class="hero-top-row">
+      <div class="brand-pill">
+        <span class="brand-dot"></span>
+        <span id="centerName">화성교통안전체험교육센터</span>
+      </div>
+    </div>
+    <h1 class="hero-title">버스양성과정 만족도 조사</h1>
+    <p class="hero-subtitle">신규 버스운전자 양성과정 수료생을 위한 설문입니다. 약 1~2분 소요됩니다.</p>
+  </div>
+</header>
+
+<nav class="stepper-bar" id="stepperBar" aria-label="설문 단계">
+  <div class="stepper-inner">
+    <div class="step-pills">
+      <button type="button" class="step-pill active"><span class="step-idx">1</span>기초정보</button>
+      <button type="button" class="step-pill"><span class="step-idx">2</span>교육평가</button>
+      <button type="button" class="step-pill"><span class="step-idx">3</span>의견작성</button>
+    </div>
+    <div class="progress-track"><div class="progress-fill" id="progressFill"></div></div>
+  </div>
+</nav>
+
+<main class="container">
+  <div class="demo-banner" id="demoBanner">
+    <strong>[담당자 안내]</strong> 아직 <code>config.js</code>에 구글 시트 웹 앱 URL이 연결되지 않아 <strong>테스트 모드</strong>로 열려 있습니다. 배포 전 <code>config.js</code>의 <code>SHEET_URL</code>을 입력해 주세요.
+  </div>
+
+  <div id="surveyForm">
+    <!-- STEP 1: 교육 정보 & 기초조사 -->
+    <section class="step-panel active" data-step-key="basic">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">STEP 1 / 3 · 버스양성과정</div>
+          <h2 class="card-title">교육 정보 및 기초조사</h2>
+          <p class="card-desc">입교 일자와 기본 운전 경력을 입력해 주세요.</p>
+        </div>
+
+        <div class="question">
+          <label class="q-label" for="eduDate">교육 입교 일자<span class="required">*</span></label>
+          <input type="date" id="eduDate">
+          <div class="error-msg" id="err-eduDate">교육 입교 일자를 선택해 주세요</div>
+        </div>
+
+        <div class="question">
+          <label class="q-label" for="age">연령 (만 나이)<span class="required">*</span></label>
+          <input type="number" id="age" inputmode="numeric" min="18" max="100" placeholder="예: 45">
+          <div class="error-msg" id="err-age">연령(만 나이)을 정확히 입력해 주세요</div>
+        </div>
+
+        <div class="question">
+          <label class="q-label">성별<span class="required">*</span></label>
+          <div class="choice-grid">
+            <label class="choice-tile">
+              <input type="radio" name="gender" value="1">
+              <span class="choice-check">✓</span>
+              <span class="choice-text">남자</span>
+            </label>
+            <label class="choice-tile">
+              <input type="radio" name="gender" value="2">
+              <span class="choice-check">✓</span>
+              <span class="choice-text">여자</span>
+            </label>
+          </div>
+          <div class="error-msg" id="err-gender">성별을 선택해 주세요</div>
+        </div>
+
+        <div class="question">
+          <label class="q-label">사업용 차량 운전경험<span class="required">*</span></label>
+          <div class="choice-grid">
+            <label class="choice-tile">
+              <input type="radio" name="bizExp" value="1">
+              <span class="choice-check">✓</span>
+              <span class="choice-text">1. 택시</span>
+            </label>
+            <label class="choice-tile">
+              <input type="radio" name="bizExp" value="2">
+              <span class="choice-check">✓</span>
+              <span class="choice-text">2. 버스</span>
+            </label>
+            <label class="choice-tile">
+              <input type="radio" name="bizExp" value="3">
+              <span class="choice-check">✓</span>
+              <span class="choice-text">3. 화물</span>
+            </label>
+            <label class="choice-tile">
+              <input type="radio" name="bizExp" value="4">
+              <span class="choice-check">✓</span>
+              <span class="choice-text">4. 건설기계</span>
+            </label>
+            <label class="choice-tile full">
+              <input type="radio" name="bizExp" value="5">
+              <span class="choice-check">✓</span>
+              <span class="choice-text">5. 타인에게 고용된 운전경력 (자가용 승용·화물·건설기계)</span>
+            </label>
+            <label class="choice-tile full">
+              <input type="radio" name="bizExp" value="6">
+              <span class="choice-check">✓</span>
+              <span class="choice-text">6. 해당없음</span>
+            </label>
+          </div>
+          <div class="error-msg" id="err-bizExp">항목을 선택하고 해당 시 경력 기간을 입력해 주세요</div>
+
+          <div class="sub-box" id="bizCareerBox">
+            <div class="sub-box-title">사업용 운전경력 기간 입력</div>
+            <div class="exp-row">
+              <input type="number" id="bizYear" inputmode="numeric" min="0" max="60" placeholder="0">
+              <span class="exp-unit">년</span>
+              <input type="number" id="bizMonth" inputmode="numeric" min="0" max="11" placeholder="0">
+              <span class="exp-unit">개월</span>
+            </div>
+          </div>
+        </div>
+
+        <div class="question">
+          <label class="q-label">자가용 운전경력<span class="required">*</span></label>
+          <div class="exp-row">
+            <input type="number" id="privYear" inputmode="numeric" min="0" max="80" placeholder="0">
+            <span class="exp-unit">년</span>
+            <input type="number" id="privMonth" inputmode="numeric" min="0" max="11" placeholder="0">
+            <span class="exp-unit">개월</span>
+          </div>
+          <div class="error-msg" id="err-privCareer">자가용 운전경력을 입력해 주세요 (없으면 0 입력)</div>
+        </div>
+      </div>
+
+      <div class="step-actions">
+        <button type="button" class="btn-next" data-action="next">다음 단계 (교육 평가) →</button>
+      </div>
+      <div style="text-align:center;">
+        <a class="back-link" href="../">← 과정 선택 화면으로</a>
+      </div>
+    </section>
+
+    <!-- STEP 2: 교육 전반 평가 -->
+    <section class="step-panel" data-step-key="rating">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">STEP 2 / 3</div>
+          <h2 class="card-title">교육 전반 평가</h2>
+          <p class="card-desc">각 문항의 점수 버튼(0점 ~ 10점)을 가볍게 눌러 선택해 주세요.</p>
+        </div>
+
+        <div class="rating-toolbar">
+          <div class="rating-counter" id="ratingCounter">평가 완료 <strong>0</strong> / 10문항</div>
+          <button type="button" id="allSatisfiedBtn" class="quick-max-btn">전체 10점(매우 만족) 선택</button>
+        </div>
+
+        <div id="ratingContainer"></div>
+      </div>
+
+      <div class="step-actions">
+        <button type="button" class="btn-prev" data-action="prev">← 이전</button>
+        <button type="button" class="btn-next" data-action="next">다음 단계 (의견 작성) →</button>
+      </div>
+    </section>
+
+    <!-- STEP 3: 의견 및 개선사항 -->
+    <section class="step-panel" data-step-key="feedback">
+      <div class="card">
+        <div class="card-head">
+          <div class="card-eyebrow">STEP 3 / 3 · 마지막 단계</div>
+          <h2 class="card-title">의견 및 개선사항</h2>
+          <p class="card-desc">더 나은 화성센터 교육을 위해 소중한 의견을 들려주세요.</p>
+        </div>
+
+        <div class="question">
+          <label class="q-label">교육과정 중 가장 만족스러운 내용은 무엇입니까?<span class="required">*</span></label>
+          <div class="choice-grid">
+            <label class="choice-tile">
+              <input type="radio" name="satisfied" value="체험교육">
+              <span class="choice-check">✓</span>
+              <span class="choice-text">1. 체험교육</span>
+            </label>
+            <label class="choice-tile">
+              <input type="radio" name="satisfied" value="교수진">
+              <span class="choice-check">✓</span>
+              <span class="choice-text">2. 교수진</span>
+            </label>
+            <label class="choice-tile">
+              <input type="radio" name="satisfied" value="시설">
+              <span class="choice-check">✓</span>
+              <span class="choice-text">3. 시설</span>
+            </label>
+            <label class="choice-tile">
+              <input type="radio" name="satisfied" value="기타">
+              <span class="choice-check">✓</span>
+              <span class="choice-text">4. 기타</span>
+            </label>
+          </div>
+          <div class="error-msg" id="err-satisfied">항목을 선택해 주세요 (기타 선택 시 내용 입력)</div>
+          <div class="etc-box" id="satisfiedEtcBox">
+            <textarea id="satisfiedEtcText" placeholder="기타 만족스러운 내용을 작성해 주세요"></textarea>
+          </div>
+        </div>
+
+        <div class="question">
+          <label class="q-label">개선점 및 불편사항<span class="required">*</span></label>
+
+          <div class="imp-card">
+            <div class="imp-title">① 교육 관련</div>
+            <div class="choice-grid">
+              <label class="choice-tile">
+                <input type="radio" name="imp_edu" value="1">
+                <span class="choice-check">✓</span>
+                <span class="choice-text">없음</span>
+              </label>
+              <label class="choice-tile">
+                <input type="radio" name="imp_edu" value="2">
+                <span class="choice-check">✓</span>
+                <span class="choice-text">있음 (작성)</span>
+              </label>
+            </div>
+            <div class="imp-textarea" id="imp_edu_box">
+              <textarea id="imp_edu_text" placeholder="교육 관련 개선점을 작성해 주세요"></textarea>
+            </div>
+          </div>
+
+          <div class="imp-card">
+            <div class="imp-title">② 시설 관련</div>
+            <div class="choice-grid">
+              <label class="choice-tile">
+                <input type="radio" name="imp_facility" value="1">
+                <span class="choice-check">✓</span>
+                <span class="choice-text">없음</span>
+              </label>
+              <label class="choice-tile">
+                <input type="radio" name="imp_facility" value="2">
+                <span class="choice-check">✓</span>
+                <span class="choice-text">있음 (작성)</span>
+              </label>
+            </div>
+            <div class="imp-textarea" id="imp_facility_box">
+              <textarea id="imp_facility_text" placeholder="시설 관련 개선점을 작성해 주세요"></textarea>
+            </div>
+          </div>
+
+          <div class="imp-card">
+            <div class="imp-title">③ 기타 의견</div>
+            <div class="choice-grid">
+              <label class="choice-tile">
+                <input type="radio" name="imp_etc" value="1">
+                <span class="choice-check">✓</span>
+                <span class="choice-text">없음</span>
+              </label>
+              <label class="choice-tile">
+                <input type="radio" name="imp_etc" value="2">
+                <span class="choice-check">✓</span>
+                <span class="choice-text">있음 (작성)</span>
+              </label>
+            </div>
+            <div class="imp-textarea" id="imp_etc_box">
+              <textarea id="imp_etc_text" placeholder="기타 의견을 작성해 주세요"></textarea>
+            </div>
+          </div>
+
+          <div class="error-msg" id="err-improvement">①~③ 모든 항목을 선택해 주세요 (있음 선택 시 내용 입력)</div>
+        </div>
+      </div>
+
+      <div class="step-actions">
+        <button type="button" class="btn-prev" data-action="prev">← 이전</button>
+        <button type="button" class="submit-btn" id="submitBtn">설문 제출 완료</button>
+      </div>
+      <div class="status-box" id="statusBox"></div>
+    </section>
+  </div>
+
+  <!-- 완료 화면 -->
+  <div class="complete-screen" id="completeScreen">
+    <div class="complete-icon">✓</div>
+    <h2>설문이 정상 제출되었습니다</h2>
+    <p>화성교통안전체험교육센터 버스양성과정에 참여해 주셔서 감사합니다.<br>보내주신 소중한 의견은 더 나은 교육 서비스 개선에 적극 반영하겠습니다.</p>
+    <div class="complete-meta" id="completeMeta"></div>
+    <button type="button" class="secondary-btn" onclick="window.location.reload()">새 설문 작성하기</button>
+  </div>
+</main>
+
+<script src="../config.js"></script>
+<script src="../assets/survey.js"></script>
+<script>
+  window.addEventListener('DOMContentLoaded', function () {
+    window.initHwaseongSurvey({ surveyType: 'bus' });
+  });
+</script>
+</body>
+</html>
