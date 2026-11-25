@@ -279,14 +279,14 @@
       }
     });
 
-    ['age', 'bizYear', 'bizMonth', 'privYear', 'privMonth', 'satisfiedEtcText'].forEach(
+    ['age', 'bizYear', 'bizMonth', 'privYear', 'satisfiedEtcText'].forEach(
       function (id) {
         var el = document.getElementById(id);
         if (!el) return;
         el.addEventListener('input', function () {
           if (id === 'age') clearErr('err-age');
           if (id === 'bizYear' || id === 'bizMonth') clearErr('err-bizExp');
-          if (id === 'privYear' || id === 'privMonth') clearErr('err-privCareer');
+          if (id === 'privYear') clearErr('err-privCareer');
           if (id === 'satisfiedEtcText') clearErr('err-satisfied');
           updateProgress();
         });
@@ -333,10 +333,7 @@
             markErr('err-bizExp', 'bizCareerBox');
           }
         }
-        if (
-          document.getElementById('privYear').value === '' &&
-          document.getElementById('privMonth').value === ''
-        ) {
+        if (document.getElementById('privYear').value === '') {
           markErr('err-privCareer', 'privYear');
         }
       } else if (stepKey === 'transfer') {
@@ -449,10 +446,7 @@
           done++;
         }
       }
-      if (
-        document.getElementById('privYear').value !== '' ||
-        document.getElementById('privMonth').value !== ''
-      ) {
+      if (document.getElementById('privYear').value !== '') {
         done++;
       }
 
@@ -510,9 +504,7 @@
         ? parseInt(document.getElementById('bizYear').value || '0', 10) * 12 +
           parseInt(document.getElementById('bizMonth').value || '0', 10)
         : '';
-      var privMonths =
-        parseInt(document.getElementById('privYear').value || '0', 10) * 12 +
-        parseInt(document.getElementById('privMonth').value || '0', 10);
+      var privMonths = parseInt(document.getElementById('privYear').value || '0', 10) * 12;
       var transferCk = document.querySelector('input[name="transfer"]:checked');
       var satCk = document.querySelector('input[name="satisfied"]:checked');
       var satText =
