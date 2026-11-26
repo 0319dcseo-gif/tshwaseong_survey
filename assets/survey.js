@@ -147,17 +147,17 @@
       updateProgress();
     });
 
-    // 0~10점 터치 패드 문항 렌더링
+    // 한 줄 고정 0~10점 슬라이더 + 클릭 가능 눈금 렌더링
     var rc = document.getElementById('ratingContainer');
     RATING_QUESTIONS.forEach(function (q, i) {
       var card = document.createElement('div');
       card.className = 'rating-card';
       card.id = 'rq' + i;
 
-      var btnsHtml = '';
+      var ticksHtml = '';
       for (var s = 0; s <= 10; s++) {
-        btnsHtml +=
-          '<button type="button" class="score-btn" data-idx="' +
+        ticksHtml +=
+          '<button type="button" class="tick-btn" data-idx="' +
           i +
           '" data-score="' +
           s +
@@ -173,36 +173,82 @@
         '.</span>' +
         q +
         '<span class="required">*</span></div>' +
+        '<div class="rating-status-row">' +
+        '<span class="rating-hint" id="hint' +
+        i +
+        '">슬라이더를 좌우로 밀거나 숫자를 눌러주세요</span>' +
         '<span class="score-pill" id="pill' +
         i +
         '">미선택</span>' +
         '</div>' +
-        '<div class="score-grid">' +
-        btnsHtml +
         '</div>' +
-        '<div class="score-scale-labels"><span class="low">0 매우 불만족</span><span>5 보통</span><span class="high">10 매우 만족</span></div>' +
+        '<div class="slider-wrap">' +
+        '<input type="range" class="score-slider" id="sl' +
+        i +
+        '" min="0" max="10" step="1" value="5" data-idx="' +
+        i +
+        '" aria-label="' +
+        (i + 1) +
+        '번 문항 점수">' +
+        '</div>' +
+        '<div class="slider-ticks">' +
+        ticksHtml +
+        '</div>' +
+        '<div class="score-scale-labels"><span class="low">◀ 0 매우 불만족</span><span>5 보통</span><span class="high">10 매우 만족 ▶</span></div>' +
         '<div class="error-msg" id="err-r' +
         i +
         '">점수를 선택해 주세요</div>';
       rc.appendChild(card);
     });
 
+    function getLevelColor(val) {
+      if (val <= 3) return '#d64545';
+      if (val <= 6) return '#d97706';
+      return '#0f4c5c';
+    }
+
     function selectScore(idx, val) {
+      val = Math.min(10, Math.max(0, val));
       ratings[idx] = String(val);
+
       var card = document.getElementById('rq' + idx);
       var pill = document.getElementById('pill' + idx);
+      var hint = document.getElementById('hint' + idx);
+      var slider = document.getElementById('sl' + idx);
       var level = getScoreLevel(val);
+      var color = getLevelColor(val);
+      var pct = val * 10;
 
       card.classList.add('answered');
       card.classList.remove('has-error');
       clearErr('err-r' + idx);
 
+      if (slider) {
+        slider.value = val;
+        slider.style.setProperty('--thumb-color', color);
+        slider.style.background =
+          'linear-gradient(to right, ' +
+          color +
+          ' 0%, ' +
+          color +
+          ' ' +
+          pct +
+          '%, #dce4e6 ' +
+          pct +
+          '%, #dce4e6 100%)';
+      }
+
+      if (hint) {
+        hint.textContent = '선택 완료';
+        hint.style.color = color;
+      }
+
       pill.className = 'score-pill ' + level.cls;
       pill.textContent = level.label;
 
-      card.querySelectorAll('.score-btn').forEach(function (b) {
+      card.querySelectorAll('.tick-btn').forEach(function (b) {
         var isSel = parseInt(b.dataset.score, 10) === val;
-        b.className = 'score-btn' + (isSel ? ' selected ' + level.cls : '');
+        b.className = 'tick-btn' + (isSel ? ' active ' + level.cls : '');
       });
 
       updateRatingCounter();
@@ -220,10 +266,27 @@
       }
     }
 
+    rc.addEventListener('input', function (e) {
+      if (e.target.classList.contains('score-slider')) {
+        selectScore(parseInt(e.target.dataset.idx, 10), parseInt(e.target.value, 10));
+      }
+    });
+
+    rc.addEventListener('change', function (e) {
+      if (e.target.classList.contains('score-slider')) {
+        selectScore(parseInt(e.target.dataset.idx, 10), parseInt(e.target.value, 10));
+      }
+    });
+
     rc.addEventListener('click', function (e) {
-      var btn = e.target.closest('.score-btn');
-      if (!btn) return;
-      selectScore(parseInt(btn.dataset.idx, 10), parseInt(btn.dataset.score, 10));
+      var tick = e.target.closest('.tick-btn');
+      if (tick) {
+        selectScore(parseInt(tick.dataset.idx, 10), parseInt(tick.dataset.score, 10));
+        return;
+      }
+      if (e.target.classList.contains('score-slider')) {
+        selectScore(parseInt(e.target.dataset.idx, 10), parseInt(e.target.value, 10));
+      }
     });
 
     document.getElementById('allSatisfiedBtn').addEventListener('click', function () {
